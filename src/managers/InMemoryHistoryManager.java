@@ -3,28 +3,88 @@ package managers;
 import tasks.AbstractTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class InMemoryHistoryManager implements HistoryManager {
-    private final ArrayList<AbstractTask> tasks;
-    private final int SIZE;
+public class InMemoryHistoryManager<T> implements HistoryManager {
+    private Node<T> head;
+    private Node<T> tail;
+    private int size;
+    private Map<Integer, Node<T>> history = new HashMap<>();
 
-    public InMemoryHistoryManager(int size) {
-        tasks = new ArrayList<>();
-        tasks.ensureCapacity(size);
-        this.SIZE = size;
+    public static class Node<T> {
+        public AbstractTask data;
+        Node<T> next;
+        Node<T> prev;
+
+        public Node(AbstractTask data) {
+            this.data = data;
+            this.prev = null;
+            this.next = null;
+        }
     }
 
-    public void add(AbstractTask task) {
-        if (tasks.size() == SIZE)
-            tasks.removeLast();
-        tasks.addFirst(task);
+    public void linkLast(AbstractTask abstractTask) {
+        if (history.containsKey(abstractTask.getId())) {
+            removeAndAddToEnd(history.get(abstractTask.getId()));
+            return;
+        }
+
+        Node<T> newNode = new Node<>(abstractTask);
+
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+        size++;
+        history.put(abstractTask.getId(), newNode);
+    }
+
+    public void add(AbstractTask abstractTask) {
+        linkLast(abstractTask);
+    }
+
+    private void removeAndAddToEnd(int id) {
+        Node<T> nodeToRemove = history.get(id);
+
+        if (nodeToRemove == null || head == null) {
+            return;
+        }
+
+        if (nodeToRemove == tail) {
+            return;
+        }
+
+
+        if (nodeToRemove == head) {
+            head = head.next;
+            head.prev = null;
+        } else {
+            nodeToRemove.prev.next = nodeToRemove.next;
+            nodeToRemove.next.prev = nodeToRemove.prev;
+        }
+
+        nodeToRemove.prev = tail;
+        nodeToRemove.next = null;
+        tail.next = nodeToRemove;
+        tail = nodeToRemove;
+    }
+
+    public void remove(int id) {
+        removeAndAddToEnd(id);
     }
 
     public ArrayList<AbstractTask> getHistory() {
-        return new ArrayList<>(tasks);
-    }
-
-    public int getSize() {
-        return SIZE;
+        ArrayList<AbstractTask> historyList = new ArrayList<>();
+        Node<T> current = head;
+        while (current != null) {
+            historyList.add(current.data);
+            current = current.next;
+        }
+        return historyList;
     }
 }
