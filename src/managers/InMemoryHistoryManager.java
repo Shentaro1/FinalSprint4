@@ -26,7 +26,7 @@ public class InMemoryHistoryManager<T> implements HistoryManager {
 
     public void linkLast(AbstractTask abstractTask) {
         if (history.containsKey(abstractTask.getId())) {
-            removeAndAddToEnd(history.get(abstractTask.getId()));
+            removeAndAddToEnd(abstractTask.getId());
             return;
         }
 
@@ -82,7 +82,7 @@ public class InMemoryHistoryManager<T> implements HistoryManager {
         ArrayList<AbstractTask> historyList = new ArrayList<>();
         Node<T> current = head;
         while (current != null) {
-            historyList.add(current.data);
+            historyList.add(current.data.copy());
             current = current.next;
         }
         return historyList;

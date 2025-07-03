@@ -38,4 +38,9 @@ public class SubTask extends AbstractTask {
                 ", status=" + getStatus() +
                 "} ";
     }
+
+    @Override
+    public SubTask copy() {
+        return new SubTask(this);
+    }
 }
