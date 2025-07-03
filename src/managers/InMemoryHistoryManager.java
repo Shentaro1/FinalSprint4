@@ -79,7 +79,7 @@ public class InMemoryHistoryManager<T> implements HistoryManager {
     }
 
     public ArrayList<AbstractTask> getHistory() {
-        ArrayList<AbstractTask> historyList = new ArrayList<>();
+        ArrayList<AbstractTask> historyList = new ArrayList<>(history.size());
         Node<T> current = head;
         while (current != null) {
             historyList.add(current.data.copy());

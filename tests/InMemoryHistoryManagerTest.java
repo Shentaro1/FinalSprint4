@@ -1,4 +1,5 @@
 import managers.InMemoryHistoryManager;
+import managers.InMemoryTaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.AbstractTask;
@@ -10,10 +11,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
     private InMemoryHistoryManager hm;
+    private InMemoryTaskManager tm;
 
     @BeforeEach
     void createInMemoryHistoryManager() {
         hm = (InMemoryHistoryManager) Managers.getDefaultHistory();
+        tm = (InMemoryTaskManager) Managers.getDefault();
     }
 
     @Test
@@ -32,16 +35,16 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void testOverflow() {
-        Task task = new Task("a", "b");
-        for (int i = 0; i < hm.getSize() + 1; i++) {
-            hm.add(task);
-        }
+    void removeAndAddToEnd() {
+        Task task1 = new Task("a", "b");
+        tm.createTask(task1);
+        tm.getTaskByID()
 
-        assertEquals(
-                hm.getSize(),
-                hm.getHistory().size(),
-                "Размер списка не должен превышать ограничение"
-        );
+        hm.add();
+
+
+        assertEquals(2, hm.getHistory().size(), "Размер не совпадает");
     }
+
+
 }
