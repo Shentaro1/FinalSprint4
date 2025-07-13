@@ -1,8 +1,9 @@
 import managers.*;
+import tasks.AbstractTask;
 
 public class Managers {
     public static HistoryManager getDefaultHistory() {
-        return new InMemoryHistoryManager();
+        return new InMemoryHistoryManager<AbstractTask>();
     }
 
     public static TaskManager getDefault() {

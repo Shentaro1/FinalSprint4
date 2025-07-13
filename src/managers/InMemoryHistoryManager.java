@@ -25,9 +25,12 @@ public class InMemoryHistoryManager<T> implements HistoryManager {
     }
 
     public void linkLast(AbstractTask abstractTask) {
-        if (history.containsKey(abstractTask.getId())) {
-            removeAndAddToEnd(abstractTask.getId());
+        if (abstractTask == null) {
             return;
+        }
+
+        if (history.containsKey(abstractTask.getId())) {
+            remove(abstractTask.getId());
         }
 
         Node<T> newNode = new Node<>(abstractTask);
@@ -48,34 +51,36 @@ public class InMemoryHistoryManager<T> implements HistoryManager {
         linkLast(abstractTask);
     }
 
-    private void removeAndAddToEnd(int id) {
+    private void removeNode(int id) {
         Node<T> nodeToRemove = history.get(id);
 
         if (nodeToRemove == null || head == null) {
             return;
         }
 
-        if (nodeToRemove == tail) {
-            return;
-        }
-
-
-        if (nodeToRemove == head) {
+        if (nodeToRemove == head && nodeToRemove == tail) {
+            head = null;
+            tail = null;
+        } else if (nodeToRemove == head) {
             head = head.next;
             head.prev = null;
+        } else if (nodeToRemove == tail) {
+            tail = tail.prev;
+            tail.next = null;
         } else {
             nodeToRemove.prev.next = nodeToRemove.next;
             nodeToRemove.next.prev = nodeToRemove.prev;
         }
 
-        nodeToRemove.prev = tail;
         nodeToRemove.next = null;
-        tail.next = nodeToRemove;
-        tail = nodeToRemove;
+        nodeToRemove.prev = null;
+
+        history.remove(id);
+        size--;
     }
 
     public void remove(int id) {
-        removeAndAddToEnd(id);
+        removeNode(id);
     }
 
     public ArrayList<AbstractTask> getHistory() {

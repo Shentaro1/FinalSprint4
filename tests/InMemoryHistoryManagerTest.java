@@ -1,5 +1,4 @@
 import managers.InMemoryHistoryManager;
-import managers.InMemoryTaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.AbstractTask;
@@ -10,13 +9,11 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
-    private InMemoryHistoryManager hm;
-    private InMemoryTaskManager tm;
+    private InMemoryHistoryManager<AbstractTask> hm;
 
     @BeforeEach
     void createInMemoryHistoryManager() {
-        hm = (InMemoryHistoryManager) Managers.getDefaultHistory();
-        tm = (InMemoryTaskManager) Managers.getDefault();
+        hm = (InMemoryHistoryManager<AbstractTask>) Managers.getDefaultHistory();
     }
 
     @Test
@@ -36,15 +33,11 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void removeAndAddToEnd() {
-        Task task1 = new Task("a", "b");
-        tm.createTask(task1);
-        tm.getTaskByID()
+        hm.add(new Task("a", "b"));
+        hm.add(new Task("new", "b"));
 
-        hm.add();
-
-
-        assertEquals(2, hm.getHistory().size(), "Размер не совпадает");
+        assertEquals(1, hm.getHistory().size(), "Размер не совпадает");
+        assertEquals("new", hm.getHistory().getLast().getDescription());
     }
-
 
 }
