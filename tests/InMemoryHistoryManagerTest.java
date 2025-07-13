@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
-    private InMemoryHistoryManager hm;
+    private InMemoryHistoryManager<AbstractTask> hm;
 
     @BeforeEach
     void createInMemoryHistoryManager() {
-        hm = (InMemoryHistoryManager) Managers.getDefaultHistory();
+        hm = (InMemoryHistoryManager<AbstractTask>) Managers.getDefaultHistory();
     }
 
     @Test
@@ -32,16 +32,12 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void testOverflow() {
-        Task task = new Task("a", "b");
-        for (int i = 0; i < hm.getSize() + 1; i++) {
-            hm.add(task);
-        }
+    void removeAndAddToEnd() {
+        hm.add(new Task("a", "b"));
+        hm.add(new Task("new", "b"));
 
-        assertEquals(
-                hm.getSize(),
-                hm.getHistory().size(),
-                "Размер списка не должен превышать ограничение"
-        );
+        assertEquals(1, hm.getHistory().size(), "Размер не совпадает");
+        assertEquals("new", hm.getHistory().getLast().getDescription());
     }
+
 }

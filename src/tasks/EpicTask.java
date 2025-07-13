@@ -66,4 +66,9 @@ public class EpicTask extends AbstractTask{
                 ", status=" + getStatus() +
                 "} ";
     }
+
+    @Override
+    public EpicTask copy() {
+        return new EpicTask(this);
+    }
 }

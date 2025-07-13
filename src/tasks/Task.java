@@ -25,4 +25,9 @@ public class Task extends AbstractTask {
                 ", status=" + getStatus() +
                 "} ";
     }
+
+    @Override
+    public Task copy() {
+        return new Task(this);
+    }
 }

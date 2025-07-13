@@ -165,10 +165,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     //f. Удаление по идентификатору.
     public boolean deleteTaskByID(int id) {
+        historyManager.remove(id);
         return tasks.remove(id) != null;
     }
 
     public boolean deleteSubTaskByID(int id) {
+        historyManager.remove(id);
         SubTask subTask = subTasks.remove(id);
         if (subTask == null)
             return false;
@@ -177,6 +179,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public boolean deleteEpicTaskByID(int id) {
+        historyManager.remove(id);
         EpicTask epicTask = epicTasks.remove(id);
         if (epicTask == null)
             return false;

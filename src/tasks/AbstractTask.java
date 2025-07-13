@@ -53,8 +53,10 @@ public abstract class AbstractTask {
         return status;
     }
 
+    public
+
     @Override
-    public boolean equals(Object o) {
+    boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof AbstractTask)) return false;
         AbstractTask that = (AbstractTask) o;
@@ -65,4 +67,6 @@ public abstract class AbstractTask {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    public abstract AbstractTask copy();
 }
